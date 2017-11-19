@@ -7,7 +7,8 @@ import {
   Text,
   View,
   Model,
-  Animated
+  Animated,
+  Scene
 } from 'react-vr';
 
 import { Easing } from 'react-native';
@@ -16,28 +17,26 @@ export default class StorefrontVR extends React.Component {
 
   constructor() {
     super();
-    this.state = { spin: new Animated.Value(0) };
+    this.state = {
+      animatedX = new Animated.Value(1.5)
+    };
   }
 
   componentDidMount() {
-    Animated.timing(
-      this.state.spin,
-      {
-        toValue: 1,
-        duration: 3000,
-        easing: Easing.ease
-      }
-    ).start();
   }
 
   render() {
-    const spin = this.state.spin.interpolate({
-      inputRange: [0, 360],
-      outputRange: ['0deg', '360deg']
-    })
     const AnimatedModel = Animated.createAnimatedComponent(Model);
     return (
-      <View>
+      <Scene
+        style={{
+          transform: [
+            {translateX: this.animatedX},
+            {translateY: 0},
+            {translateZ: 15}
+          ]  
+        }}>
+
         <Pano source={asset('chess-world.jpg')} />
         <AnimatedModel
         wireframe={false}
@@ -52,7 +51,7 @@ export default class StorefrontVR extends React.Component {
               ]
           }}
         />
-      </View>
+      </Scene>
     );
   }
 };
