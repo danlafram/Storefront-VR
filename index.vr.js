@@ -7,28 +7,51 @@ import {
   Text,
   View,
   Model,
-  AmbientLight,
+  Animated
 } from 'react-vr';
 
-import Welcome from './components/Onboard/Welcome';
-import Vans from './components/Items/Vans';
-import ItemContainer from './components/ItemDisplay/ItemTitle';
+import { Easing } from 'react-native';
 
 export default class StorefrontVR extends React.Component {
+
+  constructor() {
+    super();
+    this.state = { spin: new Animated.Value(0) };
+  }
+
+  componentDidMount() {
+    Animated.timing(
+      this.state.spin,
+      {
+        toValue: 1,
+        duration: 3000,
+        easing: Easing.ease
+      }
+    ).start();
+  }
+
   render() {
+    const spin = this.state.spin.interpolate({
+      inputRange: [0, 360],
+      outputRange: ['0deg', '360deg']
+    })
+    const AnimatedModel = Animated.createAnimatedComponent(Model);
     return (
       <View>
-        <Pano source={asset('chess-world.jpg')}/>
-        <AmbientLight intensity={ 2.6 }  />
-        {/* <Model
-          style={{ transform: [ {translate: [0, 0, -3]}, {scale: 0.05 }, {rotateY: -130}, {rotateX: 20}, {rotateZ: -10} ], }}
+        <Pano source={asset('chess-world.jpg')} />
+        <AnimatedModel
+        wireframe={false}
           source={{
-            obj: asset('under armour shoe1.obj'),
-            //mtl: asset('vans.mtl'),
+          obj: asset('vans.obj'),
+          mtl: asset('vans.mtl')
           }}
-          lit={true}
-        /> */}
-        <ItemContainer style={styles.itemContainer} />
+          style={{
+            transform: [
+              {translate: [0, -20, -30]},
+              { scale : 0.15 }
+              ]
+          }}
+        />
       </View>
     );
   }
