@@ -17,26 +17,38 @@ export default class StorefrontVR extends React.Component {
 
   constructor() {
     super();
-    this.state = {
-      animatedX = new Animated.Value(1.5)
-    };
+    this.state = { spin: new Animated.Value(0) };
   }
 
   componentDidMount() {
+    this.spinAnimation();
+  }
+
+  spinAnimation() {
+    this.state.spin.setValue(0);
+    Animated.timing(
+      this.state.spin,
+      {
+       toValue: 1,
+       duration: 3000,
+       easing: Easing.linear
+      }
+    ).start( () => this.spinAnimation() );
   }
 
   render() {
+    const spin = this.state.spin.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg']
+    });
     const AnimatedModel = Animated.createAnimatedComponent(Model);
     return (
-      <Scene
+      <View 
         style={{
           transform: [
-            {translateX: this.animatedX},
-            {translateY: 0},
-            {translateZ: 15}
-          ]  
+            {rotateY: -180}
+          ]
         }}>
-
         <Pano source={asset('chess-world.jpg')} />
         <AnimatedModel
         wireframe={false}
@@ -46,23 +58,41 @@ export default class StorefrontVR extends React.Component {
           }}
           style={{
             transform: [
-              {translate: [0, -20, -30]},
+              {translate: [28, -15, 150]},
               { scale : 0.15 }
               ]
           }}
         />
-      </Scene>
+        <AnimatedModel
+        wireframe={false}
+          source={{
+          obj: asset('vans-v2.obj'),
+          mtl: asset('vans-v2.mtl')
+          }}
+          style={{
+            transform: [
+              {translate: [-24, -15, 150]},
+              { scale : 0.15 }
+              ]
+          }}
+        />
+        <AnimatedModel
+          source={{
+          obj: asset('vans.obj'),
+          mtl: asset('vans.mtl')
+          }}
+          style={{
+            transform: [
+              {translate: [-30, -20, 5]},
+              {rotateY: spin},
+              {scale : 0.15}
+              ]
+          }}
+          wireframe={false}
+        />
+      </View>
     );
   }
 };
-
-const styles = StyleSheet.create({
-  itemContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    width: 2,
-    transform: [{translate: [-1, 1, -5]}],
-  },
-});
 
 AppRegistry.registerComponent('StorefrontVR', () => StorefrontVR);
