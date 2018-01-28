@@ -8,7 +8,8 @@ import {
   View,
   Model,
   Animated,
-  Scene
+  Scene,
+  VrButton
 } from 'react-vr';
 
 import { Easing } from 'react-native';
@@ -30,7 +31,7 @@ export default class StorefrontVR extends React.Component {
       this.state.spin,
       {
        toValue: 1,
-       duration: 3000,
+       duration: 6000,
        easing: Easing.linear
       }
     ).start( () => this.spinAnimation() );
@@ -85,6 +86,47 @@ export default class StorefrontVR extends React.Component {
             transform: [
               {translate: [-30, -20, 5]},
               {rotateY: spin},
+              {scale : 0.15}
+              ]
+          }}
+          wireframe={false}
+        />
+
+        <Text
+          style={{
+            backgroundColor: '#777879',
+            fontSize: 0.6,
+            layoutOrigin: [0.5, 0.5],
+            paddingLeft: 0.2,
+            paddingRight: 0.2,
+            textAlign: 'center',
+            textAlignVertical: 'center',
+            transform: [
+              {translate: [10, 0, 0]},
+              {rotateY: -100}
+              ],
+          }}>
+          Vans 2.0 - $19.99
+        </Text>
+        <VrButton
+        style={{
+            transform: [
+              {translate: [10, 0, 0]},
+              {rotateY: -100},
+              
+              ],
+        }}>
+          <Text>Buy</Text>
+        </VrButton>
+        <AnimatedModel
+          source={{
+          obj: asset('vans.obj'),
+          mtl: asset('vans.mtl')
+          }}
+          style={{
+            transform: [
+              {translate: [30, -20, 5]},
+              {rotateY: -100},
               {scale : 0.15}
               ]
           }}
